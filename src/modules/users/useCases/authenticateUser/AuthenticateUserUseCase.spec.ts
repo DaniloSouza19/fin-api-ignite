@@ -13,7 +13,7 @@ describe('Authenticate a User', () => {
     authenticateUserUseCase = new AuthenticateUserUseCase(usersRepositoryInMemory);
   });
 
-  it('Should be able to create a new User', async () => {
+  it('Should be able to authenticate a User', async () => {
     const password = await hash('some-password', 8);
 
     await usersRepositoryInMemory.create({
@@ -28,5 +28,31 @@ describe('Authenticate a User', () => {
     });
 
     expect(session).toHaveProperty('token')
+  });
+
+  it('Should not be able to authenticate a User from a wrong-password', async () => {
+    const password = await hash('some-password', 8);
+
+    await usersRepositoryInMemory.create({
+      email: 'johndoe@example.com',
+      name: 'John Doe',
+      password,
+    });
+
+    expect(async () => {
+      await authenticateUserUseCase.execute({
+        email: 'johndoe@example.com',
+        password: 'wrong-password'
+      });
+    }).rejects.toBeInstanceOf(IncorrectEmailOrPasswordError);
+  });
+
+  it('Should not be able to authenticate a User from a non-existent user email', async () => {
+    expect(async () => {
+      await authenticateUserUseCase.execute({
+        email: 'non.created.user@example.com',
+        password: 'some-password'
+      });
+    }).rejects.toBeInstanceOf(IncorrectEmailOrPasswordError);
   });
 });
