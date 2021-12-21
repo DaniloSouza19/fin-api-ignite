@@ -3,7 +3,6 @@ import { InMemoryStatementsRepository } from "../../repositories/in-memory/InMem
 import { InMemoryUsersRepository } from "../../../users/repositories/in-memory/InMemoryUsersRepository";
 import { OperationType } from "../../entities/Statement";
 import { GetBalanceUseCase } from "./GetBalanceUseCase";
-import { CreateStatementUseCase } from "../createStatement/CreateStatementUseCase";
 import { GetBalanceError } from "./GetBalanceError";
 
 let getBalanceUseCase: GetBalanceUseCase;
